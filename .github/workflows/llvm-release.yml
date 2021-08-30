@@ -50,7 +50,7 @@ jobs:
       if: startsWith(matrix.os, 'linux')
       with:
         name: llvm-build-linux
-        path: llvm-${{version}}-x86_64-linux-gnu.tar.gz
+        path: llvm-${{env.version}}-x86_64-linux-gnu.tar.gz
 
     - name: macOS Packaging
       if: startsWith(matrix.os, 'macos')
@@ -60,7 +60,7 @@ jobs:
       if: startsWith(matrix.os, 'macos')
       with:
         name: llvm-build-macos
-        path: llvm-${{version}}-x86_64-apple-darwin.tar.gz
+        path: llvm-${{env.version}}-x86_64-apple-darwin.tar.gz
 
     - name: Windows Packaging
       if: startsWith(matrix.os, 'windows')
@@ -70,7 +70,7 @@ jobs:
       if: startsWith(matrix.os, 'windows')
       with:
         name: llvm-build-windows
-        path: llvm-${{version}}-win-x64.zip
+        path: llvm-${{env.version}}-win-x64.zip
 
   release:
     needs: build_llvm
