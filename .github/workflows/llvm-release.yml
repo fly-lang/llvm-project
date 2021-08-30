@@ -1,12 +1,12 @@
 name: LLVM Tests
 
 env:
-  release_major: 11
+  version: 11.1.0
 
 on:
   push:
     branches:
-      - 'fly-llvm-11.1.0'
+      - fly-llvm-${{version}}
   pull_request:
 
 jobs:
@@ -40,3 +40,94 @@ jobs:
       with:
         cmake_args: -G Ninja -DCMAKE_BUILD_TYPE=Release
 
+    - name: Linux Packaging
+      if: startsWith(matrix.os, 'linux')
+      run: tar -czvf llvm-${{version}}-x86_64-linux-gnu.tar.gz build/
+
+    - uses: actions/upload-artifact@v2
+      if: startsWith(matrix.os, 'linux')
+      with:
+        name: llvm-build-linux
+        path: llvm-${{version}}-x86_64-linux-gnu.tar.gz
+
+    - name: macOS Packaging
+      if: startsWith(matrix.os, 'macos')
+      run: tar -czvf llvm-${{version}}-x86_64-apple-darwin.tar.gz build/
+
+    - uses: actions/upload-artifact@v2
+      if: startsWith(matrix.os, 'macos')
+      with:
+        name: llvm-build-macos
+        path: llvm-${{version}}-x86_64-apple-darwin.tar.gz
+
+    - name: Windows Packaging
+      if: startsWith(matrix.os, 'windows')
+      run: zip llvm-${{version}}-win-x64 build/
+
+    - uses: actions/upload-artifact@v2
+      if: startsWith(matrix.os, 'windows')
+      with:
+        name: llvm-build-windows
+        path: llvm-${{version}}-win-x64.zip
+
+  release:
+    needs: build_llvm
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: true
+          release_name: LLVM ${{version}} Release
+          tag_name: v${{version}}-fly
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: llvm-build-linux
+      - uses: actions/download-artifact@v2
+        with:
+          name: llvm-build-windows
+      - uses: actions/download-artifact@v2
+        with:
+          name: llvm-build-macos
+
+      - name: Linux Upload
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: llvm-${{version}}-x86_64-linux-gnu.tar.gz
+          asset_name: llvm-${{version}}-x86_64-linux-gnu.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Windows Upload
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: llvm-${{version}}-win-x64.zip
+          asset_name: llvm-${{version}}-win-x64.zip
+          asset_content_type: application/zip
+
+      - name: macOS Upload
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: llvm-${{version}}-x86_64-apple-darwin.tar.gz
+          asset_name: llvm-${{version}}-x86_64-apple-darwin.tar.gz
+          asset_content_type: application/gzip
