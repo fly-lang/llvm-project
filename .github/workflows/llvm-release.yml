@@ -1,8 +1,5 @@
 name: LLVM Tests
 
-env:
-  version: 11.1.0
-
 on:
   push:
     branches:
@@ -10,6 +7,9 @@ on:
   
 # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:  
+
+env:
+  version: 11.1.0
 
 jobs:
   build_llvm:
@@ -44,7 +44,7 @@ jobs:
 
     - name: Linux Packaging
       if: startsWith(matrix.os, 'linux')
-      run: tar -czvf llvm-${{version}}-x86_64-linux-gnu.tar.gz build/
+      run: tar -czvf llvm-${{env.version}}-x86_64-linux-gnu.tar.gz build/
 
     - uses: actions/upload-artifact@v2
       if: startsWith(matrix.os, 'linux')
@@ -54,7 +54,7 @@ jobs:
 
     - name: macOS Packaging
       if: startsWith(matrix.os, 'macos')
-      run: tar -czvf llvm-${{version}}-x86_64-apple-darwin.tar.gz build/
+      run: tar -czvf llvm-${{env.version}}-x86_64-apple-darwin.tar.gz build/
 
     - uses: actions/upload-artifact@v2
       if: startsWith(matrix.os, 'macos')
@@ -64,7 +64,7 @@ jobs:
 
     - name: Windows Packaging
       if: startsWith(matrix.os, 'windows')
-      run: zip llvm-${{version}}-win-x64 build/
+      run: zip llvm-${{env.version}}-win-x64 build/
 
     - uses: actions/upload-artifact@v2
       if: startsWith(matrix.os, 'windows')
