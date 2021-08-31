@@ -1,4 +1,4 @@
-name: LLVM Linux Release
+name: LLVM Windows Release
 
 on:
   push:
@@ -10,18 +10,22 @@ on:
 
 env:
   VERSION: 11.1.0
-  BUILD_PATH: ${{github.workspace}}/build
+  BUILD_PATH: ${{github.workspace}}\build
   BUILD_TYPE: Release
 
 jobs:
   build_llvm:
-    name: Build LLVM ${{env.VERSION}} on Linux
-    runs-on: ubuntu-latest
+    name: Build LLVM ${{env.VERSION}} on Windows
+    runs-on: windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
+    - name: Setup Windows
+      uses: llvm/actions/setup-windows@main
+      with:
+        arch: amd64
 
     - uses: actions/checkout@v1
       with:
@@ -30,12 +34,11 @@ jobs:
     - name: Build
       # Use this as our working directory for all subsequent commands
       run: |
-        pwd
         cmake -E make_directory $BUILD_PATH
         cd $BUILD_PATH
-        cmake $GITHUB_WORKSPACE/llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        cmake $GITHUB_WORKSPACE\llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE
         cmake --build . --config $BUILD_TYPE
-        tar -czvf ${{github.workspace}}/llvm-${{env.VERSION}}-x86_64-linux-gnu.tar.gz *
+        7z a ${{github.workspace}}\llvm-${{env.version}}-win-x64.zip *
 
     - name: Release
       uses: actions/create-release@v1
@@ -43,8 +46,8 @@ jobs:
       with:
         draft: false
         prerelease: false
-        release_name: LLVM ${{env.VERSION}} Linux Release
-        tag_name: v${{env.VERSION}}-linux-x86_64
+        release_name: LLVM ${{env.VERSION}} Windows Release
+        tag_name: v${{env.VERSION}}-win-x64
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
@@ -54,6 +57,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: llvm-${{env.VERSION}}-x86_64-linux-gnu.tar.gz
-        asset_name: llvm-${{env.VERSION}}-x86_64-linux-gnu.tar.gz
+        asset_path: llvm-${{env.version}}-win-x64.zip
+        asset_name: llvm-${{env.version}}-win-x64.zip
         asset_content_type: application/gzip
