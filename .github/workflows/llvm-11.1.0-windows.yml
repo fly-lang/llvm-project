@@ -15,7 +15,7 @@ env:
 
 jobs:
   build_llvm:
-    name: Build LLVM ${{env.VERSION}} on Windows
+    name: Build LLVM on Windows
     runs-on: windows-latest
     defaults:
       run:

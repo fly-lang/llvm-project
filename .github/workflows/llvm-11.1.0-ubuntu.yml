@@ -15,7 +15,7 @@ env:
 
 jobs:
   build_llvm:
-    name: Build LLVM ${{env.VERSION}} on Linux
+    name: Build LLVM on Linux
     runs-on: ubuntu-latest
     defaults:
       run:
