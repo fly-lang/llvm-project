@@ -10,7 +10,7 @@ on:
 
 env:
   VERSION: 11.1.0
-  BUILD_PATH: ${{github.workspace}}\build
+  BUILD_DIR: build
   BUILD_TYPE: Release
 
 jobs:
@@ -34,8 +34,8 @@ jobs:
     - name: Build
       # Use this as our working directory for all subsequent commands
       run: |
-        cmake -E make_directory $BUILD_PATH
-        cd $BUILD_PATH
+        cmake -E make_directory $BUILD_DIR
+        cd $BUILD_DIR
         cmake $GITHUB_WORKSPACE\llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE
         cmake --build . --config $BUILD_TYPE
         7z a ${{github.workspace}}\llvm-${{env.version}}-win-x64.zip *
