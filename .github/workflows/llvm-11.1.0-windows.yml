@@ -36,9 +36,9 @@ jobs:
       run: |
         cmake -E make_directory $BUILD_DIR
         cd $BUILD_DIR
-        cmake $GITHUB_WORKSPACE\llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        cmake $GITHUB_WORKSPACE/llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE
         cmake --build . --config $BUILD_TYPE
-        7z a ${{github.workspace}}\llvm-${{env.version}}-win-x64.zip *
+        7z a ${{github.workspace}}/llvm-${{env.version}}-win-x64.zip *
 
     - name: Release
       uses: actions/create-release@v1
