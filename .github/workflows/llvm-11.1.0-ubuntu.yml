@@ -35,7 +35,7 @@ jobs:
         cmake -E make_directory $INSTALL_PATH
         cd $BUILD_DIR
         cmake $GITHUB_WORKSPACE/llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
-        cmake --build . --config $BUILD_TYPE --target $INSTALL_PATH
+        cmake --build . --config $BUILD_TYPE --target install
         cd $INSTALL_PATH
         tar -czvf ${{github.workspace}}/llvm-${{env.VERSION}}-x86_64-linux-gnu.tar.gz *
 
