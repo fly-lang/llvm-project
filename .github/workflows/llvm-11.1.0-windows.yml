@@ -38,7 +38,7 @@ jobs:
         cmake -E make_directory $BUILD_DIR
         cmake -E make_directory $INSTALL_PATH
         cd $BUILD_DIR
-        cmake $GITHUB_WORKSPACE/llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
+        cmake $GITHUB_WORKSPACE/llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DLLVM_ENABLE_PROJECTS=lld -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
         cmake --build . --config $BUILD_TYPE --target install
         cd $INSTALL_PATH
         7z a $GITHUB_WORKSPACE/llvm-${{env.VERSION}}-win-x64.zip *
