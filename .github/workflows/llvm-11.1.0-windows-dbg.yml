@@ -1,4 +1,4 @@
-name: LLVM Windows Release
+name: LLVM Windows Debug
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 env:
   VERSION: 11.1.0
   BUILD_DIR: build
-  BUILD_TYPE: Release
+  BUILD_TYPE: Debug
   INSTALL_PATH: ${{github.workspace}}/build/install
 
 jobs:
