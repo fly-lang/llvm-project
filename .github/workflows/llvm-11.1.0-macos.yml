@@ -12,7 +12,7 @@ env:
   VERSION: 11.1.0
   BUILD_DIR: build
   BUILD_TYPE: Release
-  INSTALL_PATH: ${{github.workspace}}/build/install
+  INSTALL_PATH: ${{github.workspace}}/install/llvm
 
 jobs:
   build_llvm:
@@ -36,7 +36,7 @@ jobs:
         cd $BUILD_DIR
         cmake $GITHUB_WORKSPACE/llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DLLVM_ENABLE_PROJECTS=lld -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
         cmake --build . --config $BUILD_TYPE --target install
-        cd $INSTALL_PATH
+        cd $INSTALL_PATH/..
         tar -czvf ${{github.workspace}}/llvm-${{env.VERSION}}-x86_64-apple-darwin.tar.gz *
 
     - name: Release
