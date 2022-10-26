@@ -49,8 +49,8 @@ jobs:
       with:
         draft: false
         prerelease: false
-        release_name: LLVM ${{env.VERSION}} Windows ${{BUILD_TYPE}}
-        tag_name: v${{env.VERSION}}-${{BUILD_TYPE}}-win-x64
+        release_name: LLVM ${{env.VERSION}} Windows ${{env.BUILD_TYPE}}
+        tag_name: v${{env.VERSION}}-${{env.BUILD_TYPE}}-win-x64
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
@@ -60,6 +60,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: llvm-${{env.VERSION}}-${{BUILD_TYPE}}-win-x64.zip
-        asset_name: llvm-${{env.VERSION}}-${{BUILD_TYPE}}-win-x64.zip
+        asset_path: llvm-${{env.VERSION}}-${{env.BUILD_TYPE}}-win-x64.zip
+        asset_name: llvm-${{env.VERSION}}-${{env.BUILD_TYPE}}-win-x64.zip
         asset_content_type: application/gzip
