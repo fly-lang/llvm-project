@@ -41,7 +41,7 @@ jobs:
         cmake $GITHUB_WORKSPACE/llvm -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DLLVM_ENABLE_PROJECTS=lld -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
         cmake --build . --config $BUILD_TYPE --target install
         cd $INSTALL_PATH/..
-        7z a $GITHUB_WORKSPACE/llvm-${{env.VERSION}}-${{BUILD_TYPE}}-win-x64.zip *
+        7z a $GITHUB_WORKSPACE/llvm-${{env.VERSION}}-${{env.BUILD_TYPE}}-win-x64.zip *
 
     - name: Release
       uses: actions/create-release@v1
