@@ -1,9 +1,7 @@
 name: LLVM Windows Debug
 
 on:
-  
-  # Allows you to run this workflow manually from the Actions
-  workflow_dispatch:  
+  workflow_dispatch:
 
 env:
   VERSION: 11.1.0

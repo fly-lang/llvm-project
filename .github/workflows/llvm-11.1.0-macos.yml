@@ -2,11 +2,11 @@ name: LLVM macOS Release
 
 on:
   push:
+    paths-ignore:
+      - 'circleci/**'
     branches:
       - 'fly-llvm-11.1.0'
-  
-# Allows you to run this workflow manually from the Actions
-  workflow_dispatch:  
+  workflow_dispatch:
 
 env:
   VERSION: 11.1.0
