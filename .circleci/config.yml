@@ -15,6 +15,7 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
+      - run: choco install cmake -y --installargs 'ADD_CMAKE_TO_PATH=User'
       - run:
          shell: bash.exe
          command: |
@@ -23,8 +24,8 @@ jobs:
            cd build
            cmake ../llvm -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_PROJECTS=lld -DCMAKE_INSTALL_PREFIX=install/llvm
            cmake --build . --config Debug --target install
-           cd install/llvm/..
-           7z a $GITHUB_WORKSPACE/llvm-11.1.0-Debug-win-x64.zip *
+           cd install
+           7z a llvm-11.1.0-Debug-win-x64.zip *
 
 
 # Invoke jobs via workflows
