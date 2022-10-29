@@ -3,7 +3,8 @@ name: LLVM Linux Release
 on:
   push:
     paths-ignore:
-      - 'circleci/**'
+      - '.circleci/**'
+      - '.github/workflows/**'
     branches:
       - 'fly-llvm-11.1.0'
   workflow_dispatch:
