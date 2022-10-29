@@ -17,7 +17,6 @@ jobs:
       - checkout
       - run: choco install cmake -y --installargs 'ADD_CMAKE_TO_PATH=User'
       - run:
-         shell: bash.exe
          command: |
            cmake -E make_directory build
            cmake -E make_directory install/llvm
