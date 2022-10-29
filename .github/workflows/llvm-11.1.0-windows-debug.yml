@@ -1,9 +1,6 @@
 name: LLVM Windows Debug
 
 on:
-  push:
-    branches:
-      - 'fly-llvm-11.1.0'
   
   # Allows you to run this workflow manually from the Actions
   workflow_dispatch:  
