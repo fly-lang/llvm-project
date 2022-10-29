@@ -25,6 +25,8 @@ jobs:
            cmake --build . --config Debug --target install
            cd install
            7z a llvm-11.1.0-Debug-win-x64.zip *
+      - store_artifacts:
+          path: install
 
 
 # Invoke jobs via workflows
