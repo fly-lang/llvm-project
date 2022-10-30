@@ -1,5 +1,4 @@
 name: LLVM Windows
-
 on:
   push:
     paths:
@@ -12,9 +11,9 @@ on:
         default: 'Debug' 
         type: choice
         options:
-        - Debug
-        - RelWithDebInfo
-        - Release 
+        - 'Debug'
+        - 'RelWithDebInfo'
+        - 'Release' 
 
 env:
   VERSION: 11.1.0
