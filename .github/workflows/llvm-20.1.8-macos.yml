@@ -1,0 +1,63 @@
+name: LLVM macOS Release
+
+on:
+  push:
+    paths-ignore:
+      - '.github/workflows/**'
+    branches:
+      - 'fly-llvm-20.1.8'
+  workflow_dispatch:
+
+env:
+  VERSION: 20.1.8
+  BUILD_DIR: build
+  BUILD_TYPE: Release
+  INSTALL_PATH: ${{github.workspace}}/install/llvm
+
+jobs:
+  build_llvm:
+    name: Build LLVM on macOS
+    runs-on: macos-13
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install Dependencies
+        run: brew install ninja
+
+      - name: Build
+        run: |
+          cmake -E make_directory $BUILD_DIR
+          cmake -E make_directory $INSTALL_PATH
+          cd $BUILD_DIR
+          cmake $GITHUB_WORKSPACE/llvm \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+            -DLLVM_ENABLE_PROJECTS="lld" \
+            -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
+            -DLLVM_INCLUDE_TESTS=OFF \
+            -DLLVM_INCLUDE_EXAMPLES=OFF \
+            -DLLVM_INCLUDE_BENCHMARKS=OFF \
+            -DLLVM_PARALLEL_LINK_JOBS=1
+          cmake --build . --config $BUILD_TYPE --target install
+
+      - name: Package
+        run: |
+          cd $INSTALL_PATH/..
+          tar -czvf ${{github.workspace}}/llvm-${{env.VERSION}}-x86_64-apple-darwin.tar.gz *
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: false
+          name: LLVM ${{env.VERSION}} macOS Release
+          tag_name: v${{env.VERSION}}-macos-x86_64
+          files: llvm-${{env.VERSION}}-x86_64-apple-darwin.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
