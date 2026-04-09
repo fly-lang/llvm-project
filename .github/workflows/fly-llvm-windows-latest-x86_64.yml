@@ -1,4 +1,4 @@
-name: LLVM Linux Release
+name: Fly LLVM Windows Release
 
 on:
   push:
@@ -16,21 +16,21 @@ env:
 
 jobs:
   build_llvm:
-    name: Build LLVM on Linux
-    runs-on: ubuntu-22.04
+    name: Build LLVM on Windows
+    runs-on: windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
+      - name: Setup Windows
+        uses: llvm/actions/setup-windows@main
+        with:
+          arch: amd64
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ninja-build
 
       - name: Build
         run: |
@@ -38,7 +38,6 @@ jobs:
           cmake -E make_directory $INSTALL_PATH
           cd $BUILD_DIR
           cmake $GITHUB_WORKSPACE/llvm \
-            -G Ninja \
             -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
             -DLLVM_ENABLE_PROJECTS="lld" \
             -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
@@ -51,15 +50,15 @@ jobs:
       - name: Package
         run: |
           cd $INSTALL_PATH/..
-          tar -czvf ${{github.workspace}}/llvm-${{env.VERSION}}-x86_64-linux-gnu.tar.gz *
+          7z a $GITHUB_WORKSPACE/llvm-${{env.VERSION}}-win-x64.zip *
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           draft: false
           prerelease: false
-          name: LLVM ${{env.VERSION}} Linux Release
-          tag_name: v${{env.VERSION}}-linux-x86_64
-          files: llvm-${{env.VERSION}}-x86_64-linux-gnu.tar.gz
+          name: LLVM ${{env.VERSION}} Windows Release
+          tag_name: v${{env.VERSION}}-win-x64
+          files: llvm-${{env.VERSION}}-win-x64.zip
         env:
           GITHUB_TOKEN: ${{ github.token }}

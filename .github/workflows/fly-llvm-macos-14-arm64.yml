@@ -1,4 +1,4 @@
-name: LLVM macOS Release
+name: Fly LLVM macOS Release
 
 on:
   push:
