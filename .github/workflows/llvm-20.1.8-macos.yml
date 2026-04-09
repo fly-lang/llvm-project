@@ -17,7 +17,7 @@ env:
 jobs:
   build_llvm:
     name: Build LLVM on macOS
-    runs-on: macos-13
+    runs-on: macos-14
     defaults:
       run:
         shell: bash
@@ -49,7 +49,7 @@ jobs:
       - name: Package
         run: |
           cd $INSTALL_PATH/..
-          tar -czvf ${{github.workspace}}/llvm-${{env.VERSION}}-x86_64-apple-darwin.tar.gz *
+          tar -czvf ${{github.workspace}}/llvm-${{env.VERSION}}-aarch64-apple-darwin.tar.gz *
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -57,7 +57,7 @@ jobs:
           draft: false
           prerelease: false
           name: LLVM ${{env.VERSION}} macOS Release
-          tag_name: v${{env.VERSION}}-macos-x86_64
-          files: llvm-${{env.VERSION}}-x86_64-apple-darwin.tar.gz
+          tag_name: v${{env.VERSION}}-macos-aarch64
+          files: llvm-${{env.VERSION}}-aarch64-apple-darwin.tar.gz
         env:
           GITHUB_TOKEN: ${{ github.token }}
