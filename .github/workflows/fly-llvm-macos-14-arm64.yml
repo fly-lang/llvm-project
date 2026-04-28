@@ -38,7 +38,7 @@ jobs:
           cmake $GITHUB_WORKSPACE/llvm \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-            -DLLVM_ENABLE_PROJECTS="lld" \
+            -DLLVM_ENABLE_PROJECTS="lld;compiler-rt" \
             -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
             -DLLVM_INCLUDE_TESTS=OFF \
             -DLLVM_INCLUDE_EXAMPLES=OFF \
