@@ -38,6 +38,7 @@ jobs:
           cmake -E make_directory $INSTALL_PATH
           cd $BUILD_DIR
           cmake $GITHUB_WORKSPACE/llvm \
+            -G "Ninja" \
             -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
             -DLLVM_ENABLE_PROJECTS="lld;compiler-rt" \
             -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
@@ -45,7 +46,7 @@ jobs:
             -DLLVM_INCLUDE_EXAMPLES=OFF \
             -DLLVM_INCLUDE_BENCHMARKS=OFF \
             -DLLVM_PARALLEL_LINK_JOBS=1
-          cmake --build . --config $BUILD_TYPE --target install
+          cmake --build . --target install
 
       - name: Package
         run: |
