@@ -37,17 +37,35 @@ jobs:
           cmake -E make_directory $BUILD_DIR
           cmake -E make_directory $INSTALL_PATH
           cd $BUILD_DIR
+          # clang is required by lldb (its ExpressionParser links the clang libs);
+          # CLANG_BUILD_TOOLS=OFF skips the clang driver/tools links — the clang
+          # LIBRARIES and clang-resource-headers (liblldb deps) still build.
+          # Every LLDB optional dependency is AUTO-detected from the runner image
+          # unless pinned OFF — pin them ALL so the shipped lldb is fully
+          # self-contained (no python/libedit/curses on user machines).
+          # LLDB_ENABLE_LIBXML2 is distinct from LLVM_ENABLE_LIBXML2: pin both.
           cmake $GITHUB_WORKSPACE/llvm \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-            -DLLVM_ENABLE_PROJECTS="lld;compiler-rt" \
+            -DLLVM_ENABLE_PROJECTS="clang;lld;compiler-rt;lldb" \
             -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
             -DLLVM_INCLUDE_TESTS=OFF \
             -DLLVM_INCLUDE_EXAMPLES=OFF \
             -DLLVM_INCLUDE_BENCHMARKS=OFF \
             -DLLVM_PARALLEL_LINK_JOBS=1 \
             -DLLVM_BUILD_LLVM_DYLIB=ON \
-            -DLLVM_ENABLE_LIBXML2=OFF
+            -DLLVM_ENABLE_LIBXML2=OFF \
+            -DCLANG_ENABLE_ARCMT=OFF \
+            -DCLANG_ENABLE_STATIC_ANALYZER=OFF \
+            -DCLANG_BUILD_TOOLS=OFF \
+            -DLLDB_ENABLE_PYTHON=OFF \
+            -DLLDB_ENABLE_LUA=OFF \
+            -DLLDB_ENABLE_SWIG=OFF \
+            -DLLDB_ENABLE_CURSES=OFF \
+            -DLLDB_ENABLE_LIBEDIT=OFF \
+            -DLLDB_ENABLE_LZMA=OFF \
+            -DLLDB_ENABLE_LIBXML2=OFF \
+            -DLLDB_INCLUDE_TESTS=OFF
           cmake --build . --config $BUILD_TYPE --target install
 
       - name: Package
