@@ -53,6 +53,10 @@ jobs:
             -DLLVM_PARALLEL_LINK_JOBS=1 \
             -DLLVM_BUILD_LLVM_DYLIB=ON \
             -DLLVM_ENABLE_LIBXML2=OFF \
+            -DLLVM_ENABLE_ZSTD=OFF \
+            -DLLVM_ENABLE_TERMINFO=OFF \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCLANG_ENABLE_ARCMT=OFF \
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF \
             -DCLANG_BUILD_TOOLS=OFF \
@@ -65,6 +69,16 @@ jobs:
             -DLLDB_ENABLE_LIBXML2=OFF \
             -DLLDB_INCLUDE_TESTS=OFF
           cmake --build . --config $BUILD_TYPE --target install
+
+      # The package must run on a Mac without Homebrew: any library resolved
+      # from /opt/homebrew or /usr/local (zstd, libxml2, ncurses... picked up from
+      # the runner image) would make the shipped tools fail elsewhere.
+      - name: Check self-contained
+        run: |
+          bad=$(find $INSTALL_PATH -type f \( -name '*.dylib' -o -perm -u+x \) -exec otool -L {} \; 2>/dev/null \
+                | grep -E '/opt/homebrew|/usr/local' || true)
+          if [ -n "$bad" ]; then echo "non-system dependencies:"; echo "$bad"; exit 1; fi
+          echo "no Homebrew or /usr/local dependency"
 
       - name: Package
         run: |
