@@ -16,8 +16,8 @@ env:
 
 jobs:
   build_llvm:
-    name: Build LLVM on macOS-14
-    runs-on: macos-14
+    name: Build LLVM on macOS (arm64)
+    runs-on: macos-latest
     defaults:
       run:
         shell: bash
